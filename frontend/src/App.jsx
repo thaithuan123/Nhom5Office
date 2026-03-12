@@ -1,7 +1,8 @@
+import { Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./App.css";
 
-function App() {
+function Users() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -20,6 +21,24 @@ function App() {
         </div>
       ))}
     </div>
+  );
+}
+
+function Home() {
+  return (
+    <div>
+      <h1>Trang chủ</h1>
+      <Link to="/users">Xem danh sách Users</Link>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/users" element={<Users />} />
+    </Routes>
   );
 }
 
