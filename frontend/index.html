@@ -3,7 +3,7 @@
 <ul id="list"></ul>
 
 <script>
-fetch("http://localhost:3000/users")
+fetch("https://backend-webbandienthoai.onrender.com/users")
 .then(res => res.json())
 .then(data => {
 
@@ -15,5 +15,6 @@ html += `<li>${user.id} - ${user.name}</li>`;
 
 document.getElementById("list").innerHTML = html;
 
-});
+})
+.catch(err => console.log(err));
 </script>
