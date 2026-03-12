@@ -1,8 +1,18 @@
-<h1>Danh Sach Users</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Users</title>
+</head>
+
+<body>
+
+<h1>Danh Sách Users</h1>
 
 <ul id="list"></ul>
 
 <script>
+
 fetch("http://localhost:3000/users")
 .then(res => res.json())
 .then(data => {
@@ -16,4 +26,8 @@ html += `<li>${user.id} - ${user.name}</li>`;
 document.getElementById("list").innerHTML = html;
 
 });
+
 </script>
+
+</body>
+</html>
