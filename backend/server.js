@@ -1,45 +1,42 @@
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "tt2"
-});
+// dữ liệu mẫu
+const users = [
+  { id: 1, name: "Trương Hoàng Thái ThuậnThuận" },
+  { id: 2, name: "Nguyễn Đức Quang" },
+  { id: 3, name: "Nguyễn Trần Quốc Quang" },
+  { id: 4, name: "Bùi Minh Nhựt" },
+  { id: 5, name: "Phạm Bảo Tâm" }
+];
 
-db.connect(err => {
-  if (err) {
-    console.log("Lỗi kết nối DB");
-  } else {
-    console.log("Kết nối DB thành công");
-  }
-});
-
-
+    
 // lấy tất cả users
 app.get("/users", (req, res) => {
-  db.query("SELECT * FROM users", (err, result) => {
-    if (err) return res.send(err);
-    res.json(result);
-  });
+  res.json(users);
 });
 
 
 // lấy user theo id
 app.get("/users/:id", (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
-  db.query("SELECT * FROM users WHERE id=?", [id], (err, result) => {
-    if (err) return res.send(err);
-    res.json(result[0]);
-  });
+  const user = users.find(u => u.id === id);
+
+  if (!user) {
+    return res.json({ message: "User không tồn tại" });
+  }
+
+  res.json(user);
 });
 
-app.listen(3000, () => {
-  console.log("Server chạy port 3000");
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server chạy port " + PORT);
 });
