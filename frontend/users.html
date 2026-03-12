@@ -14,18 +14,21 @@
 <script>
 
 fetch("https://backend-webbandienthoai.onrender.com/users")
-.then(res => res.json())
-.then(data => {
+  .then(res => res.json())
+  .then(data => {
 
-let html = "";
+    let html = "";
 
-data.forEach(user => {
-html += `<li>${user.id} - ${user.name}</li>`;
-});
+    data.forEach(user => {
+      html += `<li>${user.id} - ${user.name}</li>`;
+    });
 
-document.getElementById("list").innerHTML = html;
+    document.getElementById("list").innerHTML = html;
 
-});
+  })
+  .catch(error => {
+    console.log("Lỗi:", error);
+  });
 
 </script>
 
