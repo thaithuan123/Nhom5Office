@@ -5,10 +5,10 @@ import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const location = useLocation();
-  const { isAdmin, adminUser, loginAsAdmin, logoutAdmin, demoCredentials } = useAdmin();
+  const { isAdmin, adminUser, loginAsAdmin, logoutAdmin } = useAdmin();
   const [form, setForm] = useState({
-    email: demoCredentials.email,
-    password: demoCredentials.password,
+    email: '',
+    password: '',
   });
   const [error, setError] = useState('');
 
@@ -61,12 +61,6 @@ const AdminDashboard = () => {
               </div>
               <button className="btn btn-primary" type="submit">Đăng nhập quản trị</button>
             </form>
-
-            <div className="demo-box">
-              <strong>Tài khoản demo</strong>
-              <p>Email: {demoCredentials.email}</p>
-              <p>Password: {demoCredentials.password}</p>
-            </div>
           </section>
         </div>
       </main>

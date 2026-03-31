@@ -5,12 +5,12 @@ import './Auth.css';
 
 const Auth = () => {
   const location = useLocation();
-  const { isAuthenticated, loginUser, registerUser, demoCredentials } = useAuth();
+  const { isAuthenticated, loginUser, registerUser } = useAuth();
   const [mode, setMode] = useState('login');
   const [error, setError] = useState('');
   const [loginForm, setLoginForm] = useState({
-    email: demoCredentials.email,
-    password: demoCredentials.password,
+    email: '',
+    password: '',
   });
   const [registerForm, setRegisterForm] = useState({
     name: '',
@@ -70,12 +70,6 @@ const Auth = () => {
           <p>
             Người dùng cần đăng nhập để xem sản phẩm, thêm vào giỏ hàng và đặt đơn. Admin có menu riêng để quản trị dữ liệu hệ thống.
           </p>
-
-          <div className="auth-demo-box">
-            <strong>Tài khoản khách demo</strong>
-            <p>Email: {demoCredentials.email}</p>
-            <p>Password: {demoCredentials.password}</p>
-          </div>
 
           <div className="auth-links">
             <Link className="btn btn-secondary" to="/admin">

@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import AdminRoute from './components/AdminRoute';
 import ProtectedRoute from './components/ProtectedRoute';
-import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import Auth from './pages/Auth';
@@ -79,7 +78,6 @@ function App() {
                 <Route path="/users" element={<Navigate to="/admin/users" replace />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <Footer />
             </div>
           </CartProvider>
         </AdminProvider>
