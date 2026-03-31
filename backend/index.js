@@ -89,6 +89,8 @@ const Order = sequelize.define('Order', {
   customerAddress: { type: DataTypes.STRING, allowNull: true },
   totalAmount: { type: DataTypes.INTEGER, allowNull: false },
   status: { type: DataTypes.STRING, allowNull: false, defaultValue: 'pending' },
+  paymentMethod: { type: DataTypes.STRING, allowNull: false, defaultValue: 'cash' },
+  paymentStatus: { type: DataTypes.STRING, allowNull: false, defaultValue: 'pending' },
   itemsJson: { type: DataTypes.TEXT, allowNull: false },
 }, {
   tableName: 'orders',
@@ -462,7 +464,7 @@ app.get('/api/orders/:id', async (req, res) => {
 
 app.post('/api/orders', async (req, res) => {
   try {
-    const { customerName, customerEmail, customerPhone, customerAddress, items } = req.body;
+    const { customerName, customerEmail, customerPhone, customerAddress, items, paymentMethod } = req.body;
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Đơn hàng phải có ít nhất 1 sản phẩm' });
     }
@@ -476,6 +478,7 @@ app.post('/api/orders', async (req, res) => {
     }));
 
     const totalAmount = normalizedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const normalizedPaymentMethod = paymentMethod === 'qr' ? 'qr' : 'cash';
 
     const order = await Order.create({
       customerName: customerName || 'Khách lẻ',
@@ -483,7 +486,9 @@ app.post('/api/orders', async (req, res) => {
       customerPhone: customerPhone || '',
       customerAddress: customerAddress || '',
       totalAmount,
-      status: 'pending',
+      status: normalizedPaymentMethod === 'qr' ? 'confirmed' : 'pending',
+      paymentMethod: normalizedPaymentMethod,
+      paymentStatus: normalizedPaymentMethod === 'qr' ? 'paid' : 'pending',
       itemsJson: JSON.stringify(normalizedItems),
     });
 
@@ -501,6 +506,7 @@ app.put('/api/orders/:id', async (req, res) => {
     if (!order) return res.status(404).json({ error: 'Đơn hàng không tồn tại' });
 
     order.status = req.body.status || order.status;
+    order.paymentStatus = req.body.paymentStatus || order.paymentStatus;
     await order.save();
     res.json(serializeOrder(order));
   } catch (err) {
@@ -520,7 +526,7 @@ app.get('/api/health', async (req, res) => {
 
 async function startServer() {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
 
     const users = await User.count();
     if (users === 0) {

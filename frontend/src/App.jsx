@@ -10,6 +10,7 @@ import Products from './pages/Products';
 import Auth from './pages/Auth';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
+import AdminOrders from './pages/AdminOrders';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Users from './pages/Users';
@@ -72,6 +73,14 @@ function App() {
                   element={(
                     <AdminRoute>
                       <Users />
+                    </AdminRoute>
+                  )}
+                />
+                <Route
+                  path="/admin/orders"
+                  element={(
+                    <AdminRoute>
+                      <AdminOrders />
                     </AdminRoute>
                   )}
                 />

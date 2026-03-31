@@ -90,6 +90,10 @@ const AdminDashboard = () => {
             <h2>Quản lý người dùng</h2>
             <p>Xem danh sách nhân sự, chỉnh sửa vai trò và cập nhật thông tin người dùng.</p>
           </Link>
+          <Link to="/admin/orders" className="admin-card-link">
+            <h2>Đơn hàng đã bán</h2>
+            <p>Xem các đơn đặt hàng thành công, phương thức thanh toán và thống kê sản phẩm đã bán.</p>
+          </Link>
           <Link to="/products" className="admin-card-link">
             <h2>Xem trang sản phẩm</h2>
             <p>Kiểm tra giao diện khách hàng đang hiển thị sản phẩm ngoài trang công khai.</p>
