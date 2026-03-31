@@ -1,85 +1,49 @@
+import { useEffect, useState } from 'react';
 import ProductList from '../components/ProductList';
+import { API_BASE } from '../config/api';
+import { fallbackProducts } from '../data/fallbackProducts';
 import './Home.css';
 
 const Home = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'iPhone 15 Pro Max',
-      brand: 'Apple',
-      price: 35900000,
-      originalPrice: 39990000,
-      specs: '6.7" AMOLED | A17 Pro | 256GB',
-      rating: 4.8,
-      reviews: 245,
-      image: '📱',
-      description: 'Flagship iPhone mới nhất với công nghệ camera tiên tiến',
-      details: 'Màn hình AMOLED 6.7 inch, Chip A17 Pro, Camera 48MP, Pin 4685mAh, 5G, Titanium'
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S24 Ultra',
-      brand: 'Samsung',
-      price: 32990000,
-      originalPrice: 36990000,
-      specs: '6.8" Dynamic AMOLED | Snapdragon 8 Gen 3',
-      rating: 4.7,
-      reviews: 189,
-      image: '📱',
-      description: 'Điện thoại flagship của Samsung với hiệu năng cực mạnh',
-      details: 'Màn hình Dynamic AMOLED 120Hz, Snapdragon 8 Gen 3, Camera 50MP, 5000mAh, S Pen'
-    },
-    {
-      id: 3,
-      name: 'Xiaomi 14 Ultra',
-      brand: 'Xiaomi',
-      price: 19990000,
-      originalPrice: 22990000,
-      specs: '6.73" AMOLED | Snapdragon 8 Gen 3',
-      rating: 4.6,
-      reviews: 156,
-      image: '📱',
-      description: 'Giá tốt nhất cho flagship performance',
-      details: 'Màn hình AMOLED 120Hz, Snapdragon 8 Gen 3, Camera Leica 50MP, 5000mAh'
-    },
-    {
-      id: 4,
-      name: 'OPPO Find X6 Pro',
-      brand: 'OPPO',
-      price: 21990000,
-      specs: '6.82" AMOLED | Snapdragon 8 Gen 3',
-      rating: 4.5,
-      reviews: 98,
-      image: '📱',
-      description: 'Thiết kế đẹp với công nghệ sạc nhanh',
-      details: 'Màn hình AMOLED 120Hz, Snapdragon 8 Gen 3, Sạc 100W, Camera 50MP'
-    },
-    {
-      id: 5,
-      name: 'iPhone 15',
-      brand: 'Apple',
-      price: 26900000,
-      originalPrice: 29990000,
-      specs: '6.1" Super Retina | A16 Bionic',
-      rating: 4.7,
-      reviews: 312,
-      image: '📱',
-      description: 'iPhone tiêu chuẩn với hiệu năng mạnh mẽ',
-      details: 'Màn hình 6.1 inch, A16 Bionic, Camera 48MP, 5G'
-    },
-    {
-      id: 6,
-      name: 'Samsung Galaxy A54',
-      brand: 'Samsung',
-      price: 12990000,
-      specs: '6.4" Super AMOLED | Exynos 1380',
-      rating: 4.4,
-      reviews: 267,
-      image: '📱',
-      description: 'Smartphone tầm trung tốt nhất hiện nay',
-      details: 'Màn hình Super AMOLED 120Hz, Exynos 1380, Camera 50MP, Pin 5000mAh'
-    },
-  ];
+  const [products, setProducts] = useState(fallbackProducts);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadProducts = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const response = await fetch(`${API_BASE}/api/products`);
+        if (!response.ok) {
+          throw new Error('Không thể tải danh sách sản phẩm');
+        }
+
+        const data = await response.json();
+        if (!ignore) {
+          setProducts(Array.isArray(data) && data.length > 0 ? data : fallbackProducts);
+        }
+      } catch (err) {
+        if (!ignore) {
+          setProducts(fallbackProducts);
+          setError('Không tải được dữ liệu live, đang hiển thị dữ liệu mẫu.');
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <main className="home-page">
@@ -119,6 +83,8 @@ const Home = () => {
       <section className="products-section">
         <div className="container">
           <h2>Sản phẩm nổi bật</h2>
+          {loading && <p>Đang tải sản phẩm...</p>}
+          {!loading && error && <p>{error}</p>}
           <ProductList products={products} />
         </div>
       </section>

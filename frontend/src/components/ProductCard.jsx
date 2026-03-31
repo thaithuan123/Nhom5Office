@@ -4,11 +4,12 @@ import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const hasImageUrl = typeof product.image === 'string' && /^https?:/i.test(product.image);
 
   return (
     <div className="product-card">
       <div className="product-image">
-        <img src={product.image || '📱'} alt={product.name} />
+        {hasImageUrl ? <img src={product.image} alt={product.name} /> : <div>{product.image || '📱'}</div>}
       </div>
       <div className="product-info">
         <h3 className="product-name">{product.name}</h3>

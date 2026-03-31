@@ -1,16 +1,42 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { API_BASE } from '../config/api';
 import './Cart.css';
 
 const Cart = () => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const [checkoutError, setCheckoutError] = useState('');
+  const [submittingOrder, setSubmittingOrder] = useState(false);
 
-  const handleCheckout = () => {
-    if (cartItems.length > 0) {
-      alert('Cảm ơn bạn! Đơn hàng của bạn đã được đặt. Mã đơn hàng: #' + Math.floor(Math.random() * 100000));
+  const handleCheckout = async () => {
+    if (cartItems.length === 0 || submittingOrder) {
+      return;
+    }
+
+    setSubmittingOrder(true);
+    setCheckoutError('');
+
+    try {
+      const response = await fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cartItems }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Không thể tạo đơn hàng');
+      }
+
+      alert(`Cảm ơn bạn! Đơn hàng của bạn đã được đặt. Mã đơn hàng: #${data.id}`);
       clearCart();
       navigate('/');
+    } catch (err) {
+      setCheckoutError(err.message);
+    } finally {
+      setSubmittingOrder(false);
     }
   };
 
@@ -117,8 +143,10 @@ const Cart = () => {
                 <span>{getTotalPrice().toLocaleString('vi-VN')} ₫</span>
               </div>
 
-              <button className="btn btn-primary btn-block" onClick={handleCheckout}>
-                Tiến hành thanh toán
+              {checkoutError && <p>{checkoutError}</p>}
+
+              <button className="btn btn-primary btn-block" onClick={handleCheckout} disabled={submittingOrder}>
+                {submittingOrder ? 'Đang xử lý...' : 'Tiến hành thanh toán'}
               </button>
 
               <button 

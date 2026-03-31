@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 import './Users.css';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -46,11 +45,12 @@ const Users = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
-      const url = isEditing ? `http://localhost:4000/api/users/${editingUserId}` : 'http://localhost:4000/api/users';
+      const url = isEditing ? `${API_BASE}/api/users/${editingUserId}` : `${API_BASE}/api/users`;
       const method = isEditing ? 'PUT' : 'POST';
 
-      const response = await fetch(url.replace('http://localhost:4000', API_BASE), {
+      const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -110,6 +110,7 @@ const Users = () => {
                   <th>Họ tên</th>
                   <th>Email</th>
                   <th>Vai trò</th>
+                  <th>Hành động</th>
                 </tr>
               </thead>
               <tbody>

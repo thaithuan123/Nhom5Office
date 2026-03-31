@@ -1,9 +1,27 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useEffect, useState, useContext } from 'react';
 
 const CartContext = createContext();
+const CART_STORAGE_KEY = 'phonehub_cart';
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    try {
+      const storedCart = window.localStorage.getItem(CART_STORAGE_KEY);
+      return storedCart ? JSON.parse(storedCart) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
 
   const addToCart = (product) => {
     setCartItems((prev) => {
