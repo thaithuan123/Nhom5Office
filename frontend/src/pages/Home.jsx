@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ProductList from '../components/ProductList';
 import { API_BASE } from '../config/api';
 import { fallbackProducts } from '../data/fallbackProducts';
@@ -51,7 +52,7 @@ const Home = () => {
         <div className="hero-content">
           <h1>Chào mừng đến PhoneHub</h1>
           <p>Nơi mua bán điện thoại di động chất lượng cao &amp; giá tốt nhất</p>
-          <button className="btn btn-primary">Khám phá ngay</button>
+          <Link className="btn btn-primary" to="/products">Quản lý sản phẩm</Link>
         </div>
       </section>
 
