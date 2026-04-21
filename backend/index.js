@@ -1253,6 +1253,19 @@ async function startServer() {
       console.log('Seeded initial promotions');
     }
 
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const products = 45; // Hoặc query từ DB
+    const users = 120;
+    const orders = 28;
+    const promotions = 5;
+    
+    res.json({ products, users, orders, promotions });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
     app.listen(port, () => {
       console.log(`Backend server running at http://localhost:${port}`);
     });
